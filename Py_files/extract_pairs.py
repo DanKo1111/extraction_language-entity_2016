@@ -1,19 +1,20 @@
+#Выделение токенов из текста, сортировка. и запись в json-файлы
 # -*- coding: utf-8 -*-
 import codecs, re, os, json
 
-def write_data (path, data):
+def write_data (path, data): # Запись в json
     json_data = json.dumps(data, ensure_ascii=False, indent=1)  
     json_file = codecs.open (path, 'w', 'utf-8')
     json_file.write (json_data)
     json_file.close()
-def read_data (path):
+def read_data (path): #Чтение json
     data_file = codecs.open(path, 'r', 'utf-8')
     data = json.load(data_file)
     data_file.close()
     return data     
 
-fix_quotes = re.compile(u'[«»“”„“]')
-lang_tokens_file = codecs.open("langs.txt", "r", "utf-8")
+fix_quotes = re.compile(u'[«»“”„“]') #Приведение кавычек к одному виду
+lang_tokens_file = codecs.open("langs.txt", "r", "utf-8") #Токены языков
 lang_tokens = []
 for i in lang_tokens_file:
     i_str = i.strip()
@@ -29,19 +30,19 @@ for i in lang_tokens_file:
     lang_tokens.append(u"пра" + i_str)
 
 
-verb_tokens_file = codecs.open("verbs.txt", "r", "utf-8")
+verb_tokens_file = codecs.open("verbs.txt", "r", "utf-8") # Токены глаголов
 verb_tokens = []
 for i in verb_tokens_file:
     verb_tokens.append(i.strip())
 
-fix_tokens_file = codecs.open("nouns.txt", "r", "utf-8")
+fix_tokens_file = codecs.open("nouns.txt", "r", "utf-8") # Токены существительных
 fix_tokens = []
 for i in fix_tokens_file:
     fix_tokens.append(i.strip())
 
-exceptions = read_data("exceptions.json")
+exceptions = read_data("exceptions.json") # Исключения
 
-def get_dechyp_tags(path="ttag_dechip.txt"):
+def get_dechyp_tags(path="ttag_dechip.txt"): #Расшифровка тегов тритаггера
     parts = {}
     a = codecs.open(path, "r", "utf-8")
     for i in a:
@@ -51,13 +52,13 @@ def get_dechyp_tags(path="ttag_dechip.txt"):
     return parts
 ttags = get_dechyp_tags()
 
-def dechyp_tag(tag):
+def dechyp_tag(tag): #Расшифровка тега
     if tag in ttags:
         return ttags[tag]
     else:
         return []
 
-def open_path(path, out = ""):
+def open_path(path, out = ""): # Выделение токенов в файлах директории
     all_gramms = []
     for i in os.walk(path):
         res = i[2]
@@ -74,7 +75,7 @@ def open_path(path, out = ""):
     write_data(out + "\\adj_noun.json", lang_fix)
     write_data(out + "\\verb_noun.json", verb_fix)
     
-def sort_gramms(gramms):
+def sort_gramms(gramms): #Сортировка токенов
     lang_verb = []
     lang_fix = []
     verb_fix = []
@@ -87,7 +88,7 @@ def sort_gramms(gramms):
             verb_fix.append(i)
     return lang_verb, lang_fix, verb_fix        
 
-def get_gramm(f_text, path):
+def get_gramm(f_text, path): #Выделение токенов из файла
     res = []
     full_text, full_nclr_text = clr_text(f_text)
 
@@ -105,7 +106,7 @@ def get_gramm(f_text, path):
                 res.append(out)
     return res
 
-def token_type(part, path, text):
+def token_type(part, path, text): #Проверка токена на соответствие правилам 
     token_verb = []
     token_lang = []
     token_fix = []
@@ -174,7 +175,7 @@ def token_type(part, path, text):
     else:
         return None, 1
 
-def clr_text(f_text):
+def clr_text(f_text): #Очистка размеченного текста перед токенизацией
     text = []
     nclr_text = []
     f_text = fix_quotes.sub(u'"', f_text)
@@ -226,6 +227,6 @@ def clr_text(f_text):
         nclr_text.append(nclr_text_parts)
     return text, nclr_text
 
-def main (in_dir, out_dir):
+def main (in_dir, out_dir): #Функции подается на вход директория с обрабатываемыми файлами, и директория, в которую следует записать результат. 
     open_path(in_dir, out_dir)
 #open_path("d:\\daniil\\course3\\paper_balanced_tagged", "d:\\daniil\\course3")
