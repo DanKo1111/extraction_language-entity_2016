@@ -229,4 +229,5 @@ def clr_text(f_text): #Очистка размеченного текста пе
 
 def main (in_dir, out_dir): #Функции подается на вход директория с обрабатываемыми файлами, и директория, в которую следует записать результат. 
     open_path(in_dir, out_dir)
+main("input", "output")
 #open_path("d:\\daniil\\course3\\paper_balanced_tagged", "d:\\daniil\\course3")
