@@ -46,4 +46,4 @@ def main(path, out): #На фход подается путь к директо�
                 #print i[0] + "\\" + j
                 #print i[0] + "\\" + j[-4:] + "csv"
                 rewrite_csv(i[0] + "\\" + j, out + "\\" + j[:-4] + "csv")
-main("D:\\Daniil\\Course3\\stat", "D:\\Daniil\\Course3\\csv2")
+main("input", "output")
